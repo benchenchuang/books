@@ -5,19 +5,29 @@
     </swiper>
 <!-- Swiper -->
     <swiper class="swiper-container gallery-top" :options="slideSwiper" ref="mySlide">
-        <swiper-slide v-for='content in contents' :key="content">{{content}}</swiper-slide>
+        <swiper-slide>
+            <home-item :data="music" :title="'音乐剧'"></home-item>
+        </swiper-slide>
     </swiper>
   </div>
 </template>
 <script>
 import * as api from '../api/index'
+import Vue from 'vue'
+import HomeItem from '../components/home_item'
 export default {
   name: 'hello',
+  components:{
+      HomeItem
+  },
   data () {
     return {
       thisIndex:0,
       tabs:[],
-      contents:['推荐内容','热点内容','深圳内容','视频内容','社会内容','娱乐内容','科技内容','问答内容','汽车内容','财经内容'],
+      music:[],
+      drama:[],
+      exhibition:[],
+      salon:[],
       swiperOption: {
           freeMode: true,
           slidesPerView: 'auto',
@@ -36,11 +46,22 @@ export default {
             this.slideShow(mySwiper.realIndex,'active');
             // this.swiperTab.slideTo(mySwiper.realIndex, 1000, false)
         }
-      }
+      },
+      
     }
   },
-  created(){
-      this.getCitys();
+  mounted(){
+      this.getCitys()
+      var timer=setInterval(()=>{
+        var tab=this.tabs.length;
+        if(tab){
+            var firstId=this.tabs[0].id;
+            this.getItems(firstId,'music').then(res=>{
+                this.music=res;
+            })
+            clearInterval(timer);
+        }
+      },100)
   },
   computed: {
       swiperTab() {
@@ -50,7 +71,18 @@ export default {
         return this.$refs.mySlide.swiper
       }
     },
-    methods:{
+  methods:{
+      getCitys(){
+          api.getCitys().then(res=>{
+              this.tabs=res.locs;
+          })
+      },
+      getActives(){
+          
+      },
+      getItems(id,type){
+          return api.getActives({loc:id,day_type:'week',type:type,count:9}).then(res=>res)
+      },
       slideShow(tabIndex,active){
         var selfTab=this.swiperTab;
         var swiperWidth = selfTab.container[0].clientWidth 
@@ -72,21 +104,22 @@ export default {
           }
           this.thisIndex=tabIndex
           var cityId=this.tabs[tabIndex].id;
-          this.getActives();
+          this.getItems(cityId,'music')
+            // 音乐 10/music
+            // 戏剧 11/drama
+            // 展览 12/exhibition
+            // 讲座 13/salon
+            // 聚会 14/party
+            // 运动 15/sports
+            // 旅行 16/travel
+            // 公益 17/commonweal
+            // 电影 18/film
         //   console.log(cityId);
-      },
-      getCitys(){
-          api.getCitys().then(res=>{
-              this.tabs=res.locs;
-          })
-      },
-      getActives(){
-          api.getActives({loc:108288,day_type:'future'}).then(res=>{
-              console.log('res: '+res.events)
-          })
       }
     }
 }
+
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -108,11 +141,6 @@ export default {
         margin-left: auto;
         margin-right: auto;
     }
-    .gallery-top .swiper-slide {
-        background: #eee;
-        background-size: cover;
-        background-position: center;
-    }
     .gallery-top {
         height: 80%;
         width: 100%;
@@ -133,7 +161,7 @@ export default {
     #topNav {
         width: 100%;
         overflow: hidden;
-        font: 16px/32px hiragino sans gb, microsoft yahei, simsun;
+        font: 14px/32px hiragino sans gb, microsoft yahei, simsun;
         border-bottom:1px solid #f8f8f8;
         background: #fff;
     }
@@ -151,4 +179,5 @@ export default {
         transform:scale(1.1);
         color:#FF2D2D;
     }
+    
 </style>
