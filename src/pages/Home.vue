@@ -62,6 +62,7 @@ export default {
             clearInterval(timer);
         }
       },100)
+      document.title="豆瓣同城";
   },
   computed: {
       swiperTab() {
