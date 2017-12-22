@@ -1,26 +1,38 @@
 <template>
   <div>
-
     <div class="sort_head">
       <div class="sort_box">
         <span class="sort_item">类型 <span class="item_down">&#155</span></span>
         <span class="sort_item">时间 <span class="item_down">&#155</span></span>
-        <span class="sort_item">区域 <span class="item_down">&#155</span></span>
+        <span class="sort_item">地点 <span class="item_down">&#155</span></span>
       </div>
     </div>
+    <sort-block @sendItem="incrementTotal1"></sort-block> 
 
   </div>
 </template>
 <script>
+import SortBlock from '../components/sort_block';
 export default {
-    data(){
-      return{
-
-      }
-    },
-    mounted(){
-      console.log(this.$route.params)
+  components:{
+    SortBlock
+  },
+  data(){
+    return{
+      type:'',
+      date_type:'',
+      loc:''
     }
+  },
+  mounted(){
+    console.log(this.$route.query)
+  },
+  methods:{
+    incrementTotal1: function (e) {
+        this.total += 1;
+        console.log(e);
+    },
+  }
 }
 </script>
 <style>
@@ -39,6 +51,7 @@ export default {
     display:-webkit-flex;
     background: #fff;
     border-bottom: 1px solid #e4e4e4;
+    box-sizing: border-box;
   }
   .sort_box .sort_item{
     flex: 1;
@@ -55,5 +68,6 @@ export default {
     transform: rotate(90deg);
     -webkit-transform: rotate(90deg);
   }
+
 </style>
 

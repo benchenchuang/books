@@ -11,7 +11,7 @@
                 <p class="item_date">{{item.begin_time | Formatdate}}</p>
             </swiper-slide>
             <swiper-slide class="item_more">
-                    <router-link :to="{path:'/sort',params:{loc:loc,day_type:'future',type:type}}">
+                    <router-link :to="{path:'/sort',query:{loc:loc,day_type:'future',type:type}}">
                         <div class="more_txt">
                             <span>全部</span>
                             <p>{{data.total}}</p>
