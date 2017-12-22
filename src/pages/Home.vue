@@ -6,7 +6,11 @@
 <!-- Swiper -->
     <swiper class="swiper-container gallery-top" :options="slideSwiper" ref="mySlide">
         <swiper-slide>
-            <home-item :data="music" :title="'音乐剧'"></home-item>
+            <home-item :loc="tabs[thisIndex]" :data="music" :type="'music'" :title="'音乐剧'"></home-item>
+            <home-item :loc="tabs[thisIndex]" :data="drama" :type="'drama'" :title="'戏剧'"></home-item>
+            <home-item :loc="tabs[thisIndex]" :data="exhibition" :type="'exhibition'" :title="'展览'"></home-item>
+            <home-item :loc="tabs[thisIndex]" :data="film" :type="'film'" :title="'电影'"></home-item>
+            <home-item :loc="tabs[thisIndex]" :data="salon" :type="'salon'" :title="'讲座'"></home-item>
         </swiper-slide>
     </swiper>
   </div>
@@ -14,6 +18,7 @@
 <script>
 import * as api from '../api/index'
 import Vue from 'vue'
+import axios from 'axios'
 import HomeItem from '../components/home_item'
 export default {
   name: 'hello',
@@ -28,6 +33,7 @@ export default {
       drama:[],
       exhibition:[],
       salon:[],
+      film:[],
       swiperOption: {
           freeMode: true,
           slidesPerView: 'auto',
@@ -46,19 +52,16 @@ export default {
             this.slideShow(mySwiper.realIndex,'active');
             // this.swiperTab.slideTo(mySwiper.realIndex, 1000, false)
         }
-      },
-      
+      },  
     }
   },
   mounted(){
-      this.getCitys()
+      this.getAllCitys();
       var timer=setInterval(()=>{
         var tab=this.tabs.length;
         if(tab){
             var firstId=this.tabs[0].id;
-            this.getItems(firstId,'music').then(res=>{
-                this.music=res;
-            })
+            this.getActives(firstId)
             clearInterval(timer);
         }
       },100)
@@ -73,13 +76,45 @@ export default {
       }
     },
   methods:{
-      getCitys(){
-          api.getCitys().then(res=>{
-              this.tabs=res.locs;
-          })
+      getAllCitys(){
+         api.getCitys({count:100}).then(res=>{
+            var getTabs=res.locs;
+            var isLive=false;
+            var thisCity;
+            var index;
+            getTabs.forEach((item,index)=>{
+                if(item.name==city){
+                    thisCity=item;
+                    index=index;
+                    isLive=true;
+                    getTabs.splice(index,1);
+                    return;
+                }
+            })
+            if(isLive){
+                getTabs.unshift(thisCity);
+            }
+            this.tabs=getTabs.slice(0,20);
+          }) 
+
       },
-      getActives(){
-          
+      getActives(id){
+        this.getItems(id,'music').then(res=>{
+            this.music=res;
+        })
+        this.getItems(id,'drama').then(res=>{
+            this.drama=res;
+        })
+        this.getItems(id,'exhibition').then(res=>{
+            this.exhibition=res;
+        })
+        this.getItems(id,'salon').then(res=>{
+            this.salon=res;
+        })
+        this.getItems(id,'salon').then(res=>{
+            this.film=res;
+            console.log(this.film)
+        })
       },
       getItems(id,type){
           return api.getActives({loc:id,day_type:'week',type:type,count:9}).then(res=>res)
@@ -105,17 +140,7 @@ export default {
           }
           this.thisIndex=tabIndex
           var cityId=this.tabs[tabIndex].id;
-          this.getItems(cityId,'music')
-            // 音乐 10/music
-            // 戏剧 11/drama
-            // 展览 12/exhibition
-            // 讲座 13/salon
-            // 聚会 14/party
-            // 运动 15/sports
-            // 旅行 16/travel
-            // 公益 17/commonweal
-            // 电影 18/film
-        //   console.log(cityId);
+          this.getActives(cityId);
       }
     }
 }
@@ -138,9 +163,6 @@ export default {
     }
     .gallery-top.swiper-container {
         width: 100%;
-        height: 300px;
-        margin-left: auto;
-        margin-right: auto;
     }
     .gallery-top {
         height: 80%;
@@ -163,7 +185,7 @@ export default {
         width: 100%;
         overflow: hidden;
         font: 14px/32px hiragino sans gb, microsoft yahei, simsun;
-        border-bottom:1px solid #f8f8f8;
+        border-bottom:1px solid #f0f0f0;
         background: #fff;
     }
     #topNav .swiper-slide {

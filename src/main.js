@@ -7,7 +7,6 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 // mount with global
 Vue.use(VueAwesomeSwiper)
 Vue.config.productionTip = false
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

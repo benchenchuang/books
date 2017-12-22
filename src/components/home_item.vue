@@ -1,5 +1,5 @@
 <template>
-  <div class="city_actives" v-if="data.events">
+  <div class="city_actives" v-if="data.total>0">
         <div class="active_head">
             <span class="active_more">全部 {{data.total | Hundred}} <span style="font-size:20px;">&#155</span></span>
             <h2>{{title}}</h2>
@@ -11,10 +11,12 @@
                 <p class="item_date">{{item.begin_time | Formatdate}}</p>
             </swiper-slide>
             <swiper-slide class="item_more">
-                    <div class="more_txt">
-                        <span>全部</span>
-                        <p>{{data.total}}</p>
-                    </div>
+                    <router-link :to="{path:'/sort',params:{loc:loc,day_type:'future',type:type}}">
+                        <div class="more_txt">
+                            <span>全部</span>
+                            <p>{{data.total}}</p>
+                        </div>
+                    </router-link>
             </swiper-slide>
         </swiper>
     </div>
@@ -22,7 +24,7 @@
 <script>
 import Vue from 'vue'
 export default {
-    props:['data','title'],
+    props:['data','title','type','loc'],
     data(){
         return{
             swiperOptionTap: {
@@ -84,15 +86,17 @@ Vue.filter('Hundred',(value)=>{
     color: #999;
 }
 .item_more{
+    position: relative;
     width: 100%;
     height: 32vw;
-    
     background: #eee;
     text-align: center;
 }
 .more_txt{
-    position: relative;
+    position: absolute;
+    width: 100%;
     top: 50%;
+    left: 0;
     transform: translateY(-50%);
     -webkit-transform: translateY(-50%);
     font-size: 13px;
