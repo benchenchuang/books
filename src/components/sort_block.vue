@@ -22,8 +22,8 @@ export default {
         }
     },
     methods:{
-        getItem(name){
-            this.$emit('sendItem',name)
+        getItem(event){
+            this.$emit('sendsort',event)
         }
     }
 }

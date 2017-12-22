@@ -7,7 +7,8 @@
         <span class="sort_item">地点 <span class="item_down">&#155</span></span>
       </div>
     </div>
-    <sort-block @sendItem="incrementTotal1"></sort-block> 
+    <sort-block @sendsort="incrementTotal1"></sort-block> 
+    <!-- <sort-block @sendItem="incrementTotal2"></sort-block>  -->
 
   </div>
 </template>
@@ -31,6 +32,10 @@ export default {
     incrementTotal1: function (e) {
         this.total += 1;
         console.log(e);
+    },
+    incrementTotal2: function (e) {
+        this.total += 1;
+        console.log('total2: '+e);
     },
   }
 }
