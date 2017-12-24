@@ -1,7 +1,7 @@
 # vue-slide
 
 > A Vue.js project
-
+<img src="./demo/images/1.png">
 <br/>
 ## Build Setup
 
