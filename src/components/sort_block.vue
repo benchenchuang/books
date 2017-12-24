@@ -2,7 +2,7 @@
   <div>
     <div class="sort_block">
         <div class="sort_view">
-            <span v-for="item in data" :class="{active:active==item.id}" :key="item.name" @click="sendItem(item.id)" class="item">{{item.name}}</span>
+            <span v-for="item in data" :class="{active:active==item.id}" :key="item.name" @click="sendItem(item)" class="item">{{item.name}}</span>
         </div>
     </div>
   </div>

@@ -2,17 +2,17 @@
   <div>
     <div class="sort_head">
       <div class="sort_box">
-        <span class="sort_item" @click="changeItem(1)">类型 <span class="item_down">&#155</span></span>
-        <span class="sort_item" @click="changeItem(2)">时间 <span class="item_down">&#155</span></span>
-        <span class="sort_item" @click="changeItem(3)">地点 <span class="item_down">&#155</span></span>
+        <span class="sort_item" :class="{active:thisIndex==1}" @click="changeItem(1)">{{type.name}} <span class="item_down">&#155</span></span>
+        <span class="sort_item" :class="{active:thisIndex==2}" @click="changeItem(2)">{{date_type.name}} <span class="item_down">&#155</span></span>
+        <span class="sort_item" :class="{active:thisIndex==3}" @click="changeItem(3)">{{loc.name}} <span class="item_down">&#155</span></span>
       </div>
     </div>
     <!-- type -->
-    <sort-block @getItem="getType" v-show="thisIndex==1" :active="type" :data="typeData"></sort-block> 
+    <sort-block @getItem="getType" v-show="thisIndex==1" :active="type.id" :data="typeData"></sort-block> 
     <!-- date -->
-    <sort-block @getItem="getDay" v-show="thisIndex==2" :active="date_type" :data="dayData"></sort-block> 
+    <sort-block @getItem="getDay" v-show="thisIndex==2" :active="date_type.id" :data="dayData"></sort-block> 
     <!-- loc -->
-    <sort-block @getItem="getLoc" v-show="thisIndex==3" :active="loc" :data="locData"></sort-block> 
+    <sort-block @getItem="getLoc" v-show="thisIndex==3" :active="loc.id" :data="locData"></sort-block> 
 
     <sort-item :data="getData"></sort-item>
 
@@ -22,6 +22,7 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
 import * as api from '../api/index'
 import SortBlock from '../components/sort_block';
 import SortItem from '../components/sort_item';
@@ -54,23 +55,18 @@ export default {
         {id:'tomorrow',name:"明天"}
       ],
       locData:[],
-      type:'',
-      date_type:'future',
-      loc:'',
+      type:{},
+      date_type:{id:'future',name:'全部'},
+      loc:{},
       getData:[],
       isLoading:false
     }
   },
   created(){
     var getQuery=this.$route.query;
-    this.loc=getQuery.city;
-    var timer=setInterval(()=>{
-      if(this.loc){
-        this.getItems();
-        clearInterval(timer)
-      }
-    },200)
-    this.type=getQuery.type;
+    this.loc={id:getQuery.city};
+    this.sortItem(getQuery.type);
+    this.getItems();
     document.title="筛选分类";
   },
   methods:{
@@ -82,28 +78,106 @@ export default {
         this.type=e;
         this.thisIndex=0;
         this.getItems();
+        console.log(e)
     },
     getDay(e) {
         this.getData=[];
         this.date_type=e;
         this.thisIndex=0;
         this.getItems();
+        console.log(e)
     },
     getLoc(e) {
         this.getData=[];
         this.loc=e;
         this.thisIndex=0;
         this.getItems();
+        console.log(e)
+    },
+    sortItem(id){
+      switch(id){
+        case 'all':
+        this.type={
+          id:'id',
+          name:'全部'
+        };
+        break;
+        case 'music':
+        this.type={
+          id:'id',
+          name:'音乐'
+        };
+        break;
+        case 'drama':
+        this.type={
+          id:'id',
+          name:'戏剧'
+        };
+        break;
+        case 'exhibition':
+        this.type={
+          id:'id',
+          name:'展览'
+        };
+        break;
+        case 'salon':
+        this.type={
+          id:'id',
+          name:'讲座'
+        };
+        break;
+        case 'party':
+        this.type={
+          id:'id',
+          name:'聚会'
+        };
+        break;
+        case 'sports':
+        this.type={
+          id:'id',
+          name:'运动'
+        };
+        break;
+        case 'travel':
+        this.type={
+          id:'id',
+          name:'旅行'
+        };
+        break;
+        case 'commonweal':
+        this.type={
+          id:'id',
+          name:'公益'
+        };
+        break;
+        case 'film':
+        this.type={
+          id:'id',
+          name:'电影'
+        };
+        break;
+        default:
+        this.type={
+          id:'',
+          name:'类型'
+        };
+
+      }
     },
     getItems(){
       this.isLoading=false;
-      var id=this.loc;
-      var type=this.type;
-      var dateType=this.date_type;
+      var id=this.loc.id;
+      var type=this.type.id;
+      var dateType=this.date_type.id;
       api.getActives({loc:id,date_type:dateType,type:type,count:100}).then(res=>{
         if(this.locData.length<2){
           this.locData=res.districts;
-          this.locData.unshift({id:this.$route.query.city,name:'全部'})
+          this.locData.unshift({id:this.$route.query.city,name:'全部'});
+          this.locData.forEach(item=>{
+            if(item.id==this.loc.id){
+              this.loc=item;
+            }
+          })
         }
         this.getData=res.events;
         this.isLoading=true;
@@ -144,6 +218,9 @@ export default {
     color: #999;
     transform: rotate(90deg);
     -webkit-transform: rotate(90deg);
+  }
+  .sort_item.active{
+    color: #00b934
   }
 </style>
 
