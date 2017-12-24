@@ -1,12 +1,10 @@
 <template>
   <div class="city_actives" v-if="data.total>0">
         <div class="active_head">
-            <router-link :to="{path:'/sort',query:{city:city,type:type}}">
-                <span class="active_more">
-                    全部 {{data.total | Hundred}} 
-                    <span style="font-size:20px;">&#155</span>
-                </span>
-            </router-link>
+            <span class="active_more">
+                全部 {{data.total}}
+                <!-- <span style="font-size:20px;">&#155</span> -->
+            </span>
             <h2>{{title}}</h2>
         </div>
         <swiper class="active_item" :options="swiperOptionTap">
@@ -14,16 +12,8 @@
                 <router-link :to="{name:'Content',params:{id:item.id}}">
                     <img class="item_pic" :src="item.image_hlarge">
                     <p class="item_title">{{item.title}}</p>
-                    <p class="item_date">{{item.begin_time | Formatdate}}</p>
+                    <p class="item_date">{{item.time_str}}</p>
                 </router-link>
-            </swiper-slide>
-            <swiper-slide class="item_more">
-                    <router-link :to="{path:'/sort',query:{city:city,type:type}}">
-                        <div class="more_txt">
-                            <span>全部</span>
-                            <p>{{data.total}}</p>
-                        </div>
-                    </router-link>
             </swiper-slide>
         </swiper>
     </div>
@@ -31,7 +21,7 @@
 <script>
 import Vue from 'vue'
 export default {
-    props:['data','title','type','city'],
+    props:['data','title'],
     data(){
         return{
             swiperOptionTap: {

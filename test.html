@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content=" initial-scale=.5">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script>
+        var viewport = document.querySelector("meta[name=viewport]");
+        var winWidths=$(window).width();
+        var per=winWidths/(750*2);
+        console.log(winWidths)
+        viewport.setAttribute('content', 'width=750, user-scalable=no, initial-scale='+per+', minimum-scale='+per+', maximum-scale='+per);
+    </script>
+</body>
+</html>

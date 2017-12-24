@@ -2,28 +2,17 @@
   <div>
     <div class="sort_block">
         <div class="sort_view">
-            <span v-for="item in list" :key="item.name" @click="getItem(item.name)" class="item">{{item.name}}</span>
+            <span v-for="item in data" :class="{active:active==item.id}" :key="item.name" @click="sendItem(item.id)" class="item">{{item.name}}</span>
         </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-    data(){
-        return{
-            list:[
-                {
-                    name:'title1'
-                },
-                {
-                    name:'title2'
-                }
-            ]
-        }
-    },
+    props:['data','active'],
     methods:{
-        getItem(event){
-            this.$emit('sendsort',event)
+        sendItem(event){
+            this.$emit('getItem',event)
         }
     }
 }
@@ -45,13 +34,20 @@ export default {
   }
   .sort_view .item{
     float: left;
+    margin: 5px 10px;
     font-size: 13px;
     color: #666;
-    height: 28px;
-    line-height: 28px;
+    height: 30px;
+    line-height: 30px;
     padding: 0 16px;
     border:1px solid #e4e4e4;
     border-radius: 18px;
+    box-sizing: border-box;
+  }
+  .item.active{
+      color: #fff;
+      background: #00b934;
+      border-color: #00b934;
   }
 </style>
 

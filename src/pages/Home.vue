@@ -6,11 +6,13 @@
 <!-- Swiper -->
     <swiper class="swiper-container gallery-top" :options="slideSwiper" ref="mySlide">
         <swiper-slide>
-            <home-item :loc="tabs[thisIndex]" :data="music" :type="'music'" :title="'音乐剧'"></home-item>
-            <home-item :loc="tabs[thisIndex]" :data="drama" :type="'drama'" :title="'戏剧'"></home-item>
-            <home-item :loc="tabs[thisIndex]" :data="exhibition" :type="'exhibition'" :title="'展览'"></home-item>
-            <home-item :loc="tabs[thisIndex]" :data="film" :type="'film'" :title="'电影'"></home-item>
-            <home-item :loc="tabs[thisIndex]" :data="salon" :type="'salon'" :title="'讲座'"></home-item>
+            <home-item :city="tabs[thisIndex].id" :data="music" :type="'music'" :title="'音乐剧'"></home-item>
+            <home-item :city="tabs[thisIndex].id" :data="drama" :type="'drama'" :title="'戏剧'"></home-item>
+            <home-item :city="tabs[thisIndex].id" :data="exhibition" :type="'exhibition'" :title="'展览'"></home-item>
+            <home-item :city="tabs[thisIndex].id" :data="film" :type="'film'" :title="'电影'"></home-item>
+            <home-item :city="tabs[thisIndex].id" :data="salon" :type="'salon'" :title="'讲座'"></home-item>
+            <div class="no-data" v-if="isLoading">加载数据中...</div>
+            <div class="no-data" v-if="!isLoading && !music.total">暂无数据...</div>
         </swiper-slide>
     </swiper>
   </div>
@@ -18,7 +20,6 @@
 <script>
 import * as api from '../api/index'
 import Vue from 'vue'
-import axios from 'axios'
 import HomeItem from '../components/home_item'
 export default {
   name: 'hello',
@@ -28,6 +29,7 @@ export default {
   data () {
     return {
       thisIndex:0,
+      isLoading:true,
       tabs:[],
       music:[],
       drama:[],
@@ -113,8 +115,10 @@ export default {
         })
         this.getItems(id,'salon').then(res=>{
             this.film=res;
-            console.log(this.film)
-        })
+        });
+        setTimeout(()=>{
+            this.isLoading=false;
+        },300)
       },
       getItems(id,type){
           return api.getActives({loc:id,day_type:'week',type:type,count:9}).then(res=>res)
@@ -189,10 +193,11 @@ export default {
         background: #fff;
     }
     #topNav .swiper-slide {
-      width: 60px!important;
+      width: 20%!important;
       padding: 5px;
       letter-spacing:2px;
       text-align:center;
+      box-sizing: border-box;
     }
     #topNav .swiper-slide span{
         transition:all .3s ease;
