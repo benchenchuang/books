@@ -1,8 +1,23 @@
 # vue-slide
 
 > A Vue.js project
+
+## 首页
 <img src="./demo/images/1.png">
 <br/>
+## 分类页面
+<img src="./demo/images/2.png">
+<br/>
+## 分类展示
+<img src="./demo/images/3.png">
+<br/>
+## 详情内容
+<img src="./demo/images/4.png">
+<br/>
+## 个人相关的活动
+<img src="./demo/images/5.png">
+<br/>
+
 ## Build Setup
 
 ``` bash
