@@ -122,7 +122,7 @@ export default {
         this.getItems(id,'salon').then(res=>{
             this.salon=res;
         })
-        this.getItems(id,'salon').then(res=>{
+        this.getItems(id,'film').then(res=>{
             this.film=res;
         });
         setTimeout(()=>{
