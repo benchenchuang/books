@@ -3,9 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VueSource from 'vue-resource'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 // mount with global
 Vue.use(VueAwesomeSwiper)
+Vue.use(VueSource)
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({

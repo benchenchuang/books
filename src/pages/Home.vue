@@ -6,11 +6,11 @@
 <!-- Swiper -->
     <swiper class="swiper-container gallery-top" :options="slideSwiper" ref="mySlide">
         <swiper-slide>
-            <home-item :city="tabs[thisIndex].id" :data="music" :type="'music'" :title="'音乐剧'"></home-item>
-            <home-item :city="tabs[thisIndex].id" :data="drama" :type="'drama'" :title="'戏剧'"></home-item>
-            <home-item :city="tabs[thisIndex].id" :data="exhibition" :type="'exhibition'" :title="'展览'"></home-item>
-            <home-item :city="tabs[thisIndex].id" :data="film" :type="'film'" :title="'电影'"></home-item>
-            <home-item :city="tabs[thisIndex].id" :data="salon" :type="'salon'" :title="'讲座'"></home-item>
+            <home-item :city="thisCityId" :data="music" :type="'music'" :title="'音乐剧'"></home-item>
+            <home-item :city="thisCityId" :data="drama" :type="'drama'" :title="'戏剧'"></home-item>
+            <home-item :city="thisCityId" :data="exhibition" :type="'exhibition'" :title="'展览'"></home-item>
+            <home-item :city="thisCityId" :data="film" :type="'film'" :title="'电影'"></home-item>
+            <home-item :city="thisCityId" :data="salon" :type="'salon'" :title="'讲座'"></home-item>
             <div class="no-data" v-if="isLoading">加载数据中...</div>
             <div class="no-data" v-if="!isLoading && !music.total">暂无数据...</div>
         </swiper-slide>
@@ -29,6 +29,7 @@ export default {
   data () {
     return {
       thisIndex:0,
+      thisCityId:'',
       isLoading:true,
       tabs:[],
       music:[],
@@ -57,12 +58,20 @@ export default {
       },  
     }
   },
+  watch:{
+     thisIndex:{
+         thisCityId(){
+             return this.tabs[thisIndex].id;
+         }
+     } 
+  },
   mounted(){
       this.getAllCitys();
       var timer=setInterval(()=>{
         var tab=this.tabs.length;
         if(tab){
             var firstId=this.tabs[0].id;
+            this.thisCityId=firstId;
             this.getActives(firstId)
             clearInterval(timer);
         }
